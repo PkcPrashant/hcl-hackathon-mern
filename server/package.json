@@ -8,6 +8,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.1",
     "rimraf": "^6.0.1",
+    "amqplib": "^0.10.8",
+    "body-parser": "^2.2.0",
     "zod": "^3.25.64"
   },
   "license": "MIT",
@@ -34,6 +36,7 @@
     "prisma:migrate": "prisma migrate dev --name init"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.7",
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.19",
     "@types/express": "4.17.17",
