@@ -8,6 +8,7 @@ import { store } from "./features/store";
 import PrivateRoute from "./components/PrivateRoute";
 import Layout from "./components/Layout";
 import TransactionPage from "./pages/TransactionPage";
+import PortfolioPage from "./pages/PortfolioPage";
 
 function App() {
   return (
@@ -31,6 +32,16 @@ function App() {
               <PrivateRoute>
                 <Layout>
                   <TransactionPage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/portfolio-page"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <PortfolioPage />
                 </Layout>
               </PrivateRoute>
             }

@@ -36,7 +36,7 @@ export default function LoginPage(): JSX.Element {
         if (!res.ok) throw new Error(data.message || "Login failed");
          console.log(data,"data of the api")
         dispatch(setUser({ user: data.data.user, token: data.data.token }));
-        navigate("/order-page");
+        navigate("/portfolio-page");
       } catch (err: any) {
         setErrors({ password: err.message });
       } finally {

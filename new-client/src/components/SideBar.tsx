@@ -16,6 +16,14 @@ export default function SideBar() {
     <aside className="h-screen w-64 bg-gray-800 text-white flex flex-col p-4 shadow-lg">
       <h2 className="text-2xl font-bold mb-8">Dashboard</h2>
       <nav className="flex flex-col space-y-4">
+      <Link
+          to="/portfolio-page"
+          className={`px-4 py-2 rounded hover:bg-gray-700 ${
+            isActive("/portfolio-page") ? "bg-gray-700" : ""
+          }`}
+        >
+          Portfolio
+        </Link>
         <Link
           to="/order-page"
           className={`px-4 py-2 rounded hover:bg-gray-700 ${
@@ -32,6 +40,7 @@ export default function SideBar() {
         >
           Transactions
         </Link>
+      
       </nav>
     </aside>
   );
