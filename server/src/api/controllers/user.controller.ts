@@ -24,8 +24,25 @@ class UserController {
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, email } = req.body;
-      const user = await UserDetail.create({ name, email });
+      const {
+        firstName,
+        lastName,
+        emailAddress,
+        createdOn,
+        createdBy,
+        modifiedOn,
+        modifiedBy,
+      } = req.body;
+      const user = await UserDetail.create({
+        firstName,
+        lastName,
+        emailAddress,
+        createdOn,
+        createdBy,
+        modifiedOn,
+        modifiedBy
+      });
+      console.log(user)
       successMiddleware(user, true, res, 201);
     } catch (err) {
       next(err);

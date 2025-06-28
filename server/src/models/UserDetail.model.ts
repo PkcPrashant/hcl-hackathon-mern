@@ -1,6 +1,7 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
 const UserDetailSchema = new Schema({
+  _id: { type: Schema.Types.ObjectId, auto: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   emailAddress: { type: String, required: true, unique: true },
