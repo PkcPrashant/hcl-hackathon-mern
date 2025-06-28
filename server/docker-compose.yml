@@ -1,19 +1,27 @@
-version: '3.8'
-
 services:
-  mongodb:
-    image: mongo:6.0
-    restart: always
+  rabbitmq:
+      image: rabbitmq:latest
+      container_name: rabbitmq
+      restart: always
+      ports:
+        - 5672:5672
+        - 15672:15672
+      environment:
+        RABBITMQ_DEFAULT_USER: kalo
+        RABBITMQ_DEFAULT_PASS: kalo
+      configs:
+        - source: rabbitmq-plugins
+          target: /etc/rabbitmq/enabled_plugins
+      volumes:
+        - rabbitmq-lib:/var/lib/rabbitmq/
+        - rabbitmq-log:/var/log/rabbitmq
 
-    environment:
-      MONGO_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
-      MONGO_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
-      MONGO_DATABASE: ${MONGO_DATABASE}
-
-    ports:
-      - '27017:27017'
-    volumes:
-      - mongodata:/data/db
+configs:
+  rabbitmq-plugins:
+    content: "[rabbitmq_management]."  
 
 volumes:
-  mongodata:
+  rabbitmq-lib:
+    driver: local
+  rabbitmq-log:
+    driver: local

@@ -2,6 +2,8 @@ import { app } from "./init";
 import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes";
 import portfolioRoutes from "./routes/portfolio.routes";
+import ordersRoutes from "./routes/order.routes";
+
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { loggerMiddleware } from "./middlewares/logger.middleware";
 
@@ -11,6 +13,7 @@ app.use(loggerMiddleware);
 app.use("/v1/auth", authRoutes);
 app.use("/v1/users", userRoutes);
 app.use("/v1/portfolio", portfolioRoutes);
+app.use("/orders", ordersRoutes);
 
 app.use(errorMiddleware);
 
