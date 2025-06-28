@@ -42,7 +42,6 @@ class UserController {
         modifiedOn,
         modifiedBy
       });
-      console.log(user)
       successMiddleware(user, true, res, 201);
     } catch (err) {
       next(err);

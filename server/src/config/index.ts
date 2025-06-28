@@ -1,3 +1,5 @@
-import dotenv from "dotenv";
+import { config } from 'dotenv';
 
-dotenv.config();
+config();
+
+export const MONGODB_URI = process.env.MONGODB_URI || ""

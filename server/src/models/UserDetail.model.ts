@@ -11,4 +11,4 @@ const UserDetailSchema = new Schema({
   modifiedBy: { type: String },
 });
 
-export default model('UserDetail', UserDetailSchema);
+export default model('user_detail', UserDetailSchema);
