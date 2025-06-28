@@ -9,10 +9,10 @@ const JWT_SECRET = process.env.JWT_SECRET || 'default-secret';
 const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || '1d') as SignOptions['expiresIn'];
 
 class AuthController {
-  async login(req: Request, res: Response, next: NextFunction) {
+  async login(req: Request, res: Response, next: NextFunction) { 
     try {
       const { emailAddress, password } = req.body;
-
+        console.log(req.body,"body data for login")
       if (!emailAddress || !password) {
         return res.status(400).json({ message: 'Email and password are required' });
       }

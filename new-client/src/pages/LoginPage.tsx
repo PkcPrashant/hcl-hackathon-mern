@@ -1,43 +1,49 @@
-import React, { JSX } from "react";
+import React, { useState, JSX } from "react";
 import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { AppDispatch } from "../features/store";
 import { setUser } from "../features/authSlice";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormValues {
-  username: string;
+  emailAddress: string;
   password: string;
 }
 
 export default function LoginPage(): JSX.Element {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const formik = useFormik<LoginFormValues>({
-    initialValues: { username: "", password: "" },
+    initialValues: { emailAddress: "", password: "" },
     validationSchema: Yup.object({
-      username: Yup.string().required("Username is required"),
+      emailAddress: Yup.string().email("Invalid email address").required("Email is required"),
       password: Yup.string().required("Password is required"),
     }),
-    onSubmit: async (values, { setSubmitting, setErrors }) => {
+    onSubmit: async (values, { setSubmitting, setErrors, setTouched }) => {
+      setTouched({ emailAddress: true, password: true }, false);
       try {
-        const res = await fetch("/api/login", {
+        const res = await fetch("http://localhost:8080/v1/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
         });
-
+       console.log(res,"response for the login")
         const data = await res.json();
-
+    
         if (!res.ok) throw new Error(data.message || "Login failed");
-
-        dispatch(setUser(data.user));
+         console.log(data,"data of the api")
+        dispatch(setUser({ user: data.data.user, token: data.data.token }));
+        navigate("/order-page");
       } catch (err: any) {
         setErrors({ password: err.message });
       } finally {
         setSubmitting(false);
       }
-    },
+    }
+    
   });
 
   return (
@@ -49,32 +55,40 @@ export default function LoginPage(): JSX.Element {
         <form onSubmit={formik.handleSubmit} className="space-y-4">
           <div className="flex flex-col justify-start items-start">
             <label className="text-sm font-medium text-gray-700">
-              Username
+              Email
             </label>
             <input
-              type="text"
-              {...formik.getFieldProps("username")}
+              type="email"
+              {...formik.getFieldProps("emailAddress")}
               className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your username"
+              placeholder="Enter your emailAddress"
             />
-            {formik.touched.username && formik.errors.username && (
+            {formik.touched.emailAddress && formik.errors.emailAddress && (
               <div className="text-red-500 text-sm">
-                {formik.errors.username}
+                {formik.errors.emailAddress}
               </div>
             )}
           </div>
 
-          <div className="flex flex-col justify-start items-start
-          ">
+          <div className="flex flex-col justify-start items-start">
             <label className="text-sm font-medium text-gray-700">
               Password
             </label>
-            <input
-              type="password"
-              {...formik.getFieldProps("password")}
-              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your password"
-            />
+            <div className="relative w-full">
+              <input
+                type={showPassword ? "text" : "password"}
+                {...formik.getFieldProps("password")}
+                className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+                placeholder="Enter your password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600"
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
             {formik.touched.password && formik.errors.password && (
               <div className="text-red-500 text-sm">
                 {formik.errors.password}
