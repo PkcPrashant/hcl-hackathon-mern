@@ -1,13 +1,50 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "echo \"Error: no build specified\" && exit 1"
+  "dependencies": {
+    "@prisma/client": "^6.10.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "4.18.2",
+    "rimraf": "^6.0.1",
+    "zod": "^3.25.64"
   },
-  "author": "Prashant",
-  "license": "ISC",
-  "description": ""
+  "author": {
+    "name": "Vladimir Gorin",
+    "email": "vladimirgorin410@gmail.com"
+  },
+  "license": "MIT",
+  "name": "express-ts-starter",
+  "version": "1.0.1",
+  "description": "A simple Express.js starter template using TypeScript",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VladimirGorin/express-ts-starter.git"
+  },
+  "keywords": [
+    "express",
+    "typescript",
+    "starter",
+    "template"
+  ],
+  "engines": {
+    "node": ">=20.2.0"
+  },
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "start": "node dist/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:generate:prod": "prisma generate --no-engine",
+    "prisma:postinstall": "npm run generate:prod",
+    "prisma:migrate": "prisma migrate dev --name init"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "4.17.17",
+    "@types/node": "^20.0.1",
+    "prisma": "^6.10.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3"
+  }
 }
