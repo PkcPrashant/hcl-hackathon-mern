@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { successMiddleware } from '../middlewares/success.middleware';
-import UserDetail from '../../models/UserDetail.model';
+import UserSchema from '../../models/User.model';
 
 class UserController {
   async getAll(_req: Request, res: Response, next: NextFunction) {
     try {
-      const users = await UserDetail.find();
+      const users = await UserSchema.find();
       successMiddleware(users, true, res);
     } catch (err) {
       next(err);
@@ -14,7 +14,7 @@ class UserController {
 
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await UserDetail.findById(req.params.id);
+      const user = await UserSchema.findById(req.params.id);
       if (!user) return res.status(404).json({ message: 'User not found' });
       successMiddleware(user, true, res);
     } catch (err) {
@@ -33,7 +33,7 @@ class UserController {
         modifiedOn,
         modifiedBy,
       } = req.body;
-      const user = await UserDetail.create({
+      const user = await UserSchema.create({
         firstName,
         lastName,
         emailAddress,
@@ -51,7 +51,7 @@ class UserController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { name } = req.body;
-      const updatedUser = await UserDetail.findByIdAndUpdate(
+      const updatedUser = await UserSchema.findByIdAndUpdate(
         req.params.id,
         { name },
         { new: true }
@@ -65,7 +65,7 @@ class UserController {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const deletedUser = await UserDetail.findByIdAndDelete(req.params.id);
+      const deletedUser = await UserSchema.findByIdAndDelete(req.params.id);
       if (!deletedUser) return res.status(404).json({ message: 'User not found' });
       successMiddleware({ message: 'User deleted' }, true, res);
     } catch (err) {
