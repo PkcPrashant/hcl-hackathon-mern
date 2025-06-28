@@ -1,28 +1,29 @@
-import { Kafka, Producer } from "kafkajs";
+import amqp from "amqplib/callback_api.js";
 
-export interface IProducer {
-  send(topic: string, message: string, successCB: any, failureCB: any): Promise<any>;
-}
+export class MessageProducer {
+    rabbit;
+    constructor() {
+        this.rabbit = amqp;
+    }
 
-export class OrderProducer implements IProducer {
-  private readonly producer!: Producer;
+    send(payload: string) {
+      this.rabbit.connect(`amqp://${process.env.RABBIT_MQ_USERNAME}:${process.env.RABBIT_MQ_PASSWORD}@${process.env.RABBIT_MQ_HOST}:${process.env.RABBIT_MQ_PORT}/`, function(error, connection) {
+          if (error) {
+              throw error;
+          }
 
-  constructor(kafka: Kafka) {
-    this.producer = kafka.producer();
-    this.producer.connect()
-      .then(() => console.log('Kafka producer connected'))
-      .catch(e => {
-        console.error(`Error connecting Kafka producer: ${e}`);
-        throw e;
+          connection.createChannel((error1: any, channel: any) =>{
+              if (error1) {
+                  throw error1;
+              }
+
+              var data = JSON.stringify(payload);
+              channel.assertQueue(process.env.RABBIT_MQ_QUEUE, {
+                  durable: true
+              });
+
+              channel.sendToQueue(process.env.RABBIT_MQ_QUEUE, Buffer.from(data));
+          });
       });
-  }
-
-  public send(topic: string, message: string, successCB: any, failureCB: any): Promise<any> {
-    return this.producer.send({
-      topic: topic,
-      messages: [{ value: message }],
-    })
-      .then(successCB)
-      .catch(failureCB);
-  }
+    }
 }

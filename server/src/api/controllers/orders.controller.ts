@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import { successMiddleware } from "../middlewares/success.middleware";
-import { OrderService } from "../services/OrderService";
+
+import CreateOrder from "./Order/CreateOrder";
 
 class OrdersController {
-  private orderService = new OrderService();
-
+  
   async test(_req: Request, res: Response, next: NextFunction) {
+
     try {
-      await this.orderService.createOrder(
+      await new CreateOrder().create(
         {
           items: [
             {

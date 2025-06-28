@@ -1,48 +1,33 @@
-import { Consumer, EachMessagePayload } from "kafkajs";
+import amqp from 'amqplib/callback_api.js'
 
-export interface IConsumer {
-  connect(): Promise<void>;
-  handle(message: any): Promise<void>
-  disconnect(): Promise<void>;
-}
 
-export class OrderConsumer implements IConsumer {
-  private readonly consumer!: Consumer;
-  private topic = process.env.KAFKA_TOPIC || 'default-topic';
+export class OrderConsumer {
 
-  constructor(kafka: any, groupId: string) {
-    this.consumer = kafka.consumer({ groupId });
-  }
+  public connect(): void {
+    amqp.connect(`amqp://${process.env.RABBIT_MQ_USERNAME}:${process.env.RABBIT_MQ_PASSWORD}@${process.env.RABBIT_MQ_HOST}:${process.env.RABBIT_MQ_PORT}/`, function (error, connection) {
+        if (error) {
+            throw error;
+        }
 
-  public connect(): Promise<void> {
-    return this.consumer.connect()
-      .then(() => this.consumer.subscribe({ topic: this.topic }))
-      .then(() => this.consumer.run({ eachMessage: payload => this.handle(payload) }))
-      .catch(e => {
-        console.log(`Can't connect ${e}`);
-        throw e;
-      });
-  }
-  
-  public handle({ topic, partition, message }: EachMessagePayload): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      try {
-        console.log({
-          topic,
-          partition,
-          value: message.value?.toString(),
+        connection.createChannel(function (error1, channel) {
+            if (error1) {
+                throw error1;
+            }
+
+            channel.assertQueue('mediumQueue', {
+                durable: false
+            });
+
+            channel.consume('mediumQueue', function (payload) {
+                if (payload != null) {
+                    let contents = JSON.parse(payload.content.toString())
+                    console.log('===== Receive =====');
+                    console.log(contents);
+                }
+            }, {
+                noAck: true
+            })
         });
-        resolve();
-      } catch (e) {
-        console.log(`Error on handle message ${e}`);
-        reject(e);
-      }
-
     });
-  }
-
-  disconnect(): Promise<void> {
-    return this.consumer.disconnect()
-      .catch(e => console.log(`Error on disconnect ${e}`));
   }
 }
