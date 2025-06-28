@@ -8,9 +8,9 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  token: null,
+  token: localStorage.getItem("token"),
 };
-
+ 
 const authSlice = createSlice({
   name: "auth",
   initialState,

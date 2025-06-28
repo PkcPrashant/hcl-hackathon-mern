@@ -2,7 +2,7 @@ import React from 'react'
 
 function OrderForm() {
   return (
-    <div>OrderForm</div>
+    <div></div>
   )
 }
 

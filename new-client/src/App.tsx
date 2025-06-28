@@ -5,22 +5,34 @@ import LoginPage from "./pages/LoginPage";
 import OrderPage from "./pages/OrderPage";
 import { Provider } from "react-redux";
 import { store } from "./features/store";
+import PrivateRoute from "./components/PrivateRoute";
 import Layout from "./components/Layout";
-
+import TransactionPage from "./pages/TransactionPage";
 
 function App() {
   return (
     <Provider store={store}>
-     
       <Router>
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route
             path="/order-page"
             element={
+              <PrivateRoute>
                 <Layout>
                   <OrderPage />
                 </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/transaction-page"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <TransactionPage />
+                </Layout>
+              </PrivateRoute>
             }
           />
         </Routes>

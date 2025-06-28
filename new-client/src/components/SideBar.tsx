@@ -8,7 +8,7 @@ export default function SideBar() {
   const { token } = useSelector((state: RootState) => state.auth);
   const location = useLocation();
 
-  // if (!token) return null;
+  if (!token) return null;
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -24,9 +24,14 @@ export default function SideBar() {
         >
           Orders
         </Link>
-        {/* Future Links:
-        <Link to="/products" className="...">Products</Link>
-        */}
+        <Link
+          to="/transaction-page"
+          className={`px-4 py-2 rounded hover:bg-gray-700 ${
+            isActive("/transaction-page") ? "bg-gray-700" : ""
+          }`}
+        >
+          Transactions
+        </Link>
       </nav>
     </aside>
   );

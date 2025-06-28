@@ -8,7 +8,7 @@ export default function NavBar() {
   const navigate = useNavigate();
   const { token, user } = useSelector((state: RootState) => state.auth);
 
-  // if (!token) return null;
+  if (!token) return null;
 
   const handleLogout = () => {
     dispatch(logout());
