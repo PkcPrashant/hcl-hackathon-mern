@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express";
-import { successMiddleware } from "../middlewares/success.middleware";
-import { prisma } from "../../database/client";
+import { Request, Response, NextFunction } from 'express';
+import { successMiddleware } from '../middlewares/success.middleware';
+import UserDetail from '../../models/UserDetail.model';
 
 class UserController {
   async getAll(_req: Request, res: Response, next: NextFunction) {
     try {
-      const users = await prisma.user.findMany();
+      const users = await UserDetail.find();
       successMiddleware(users, true, res);
     } catch (err) {
       next(err);
@@ -14,14 +14,8 @@ class UserController {
 
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = String(req.params.id);
-
-      const user = await prisma.user.findUnique({
-        where: { id },
-      });
-
-      if (!user) return res.status(404).json({ message: "User not found" });
-
+      const user = await UserDetail.findById(req.params.id);
+      if (!user) return res.status(404).json({ message: 'User not found' });
       successMiddleware(user, true, res);
     } catch (err) {
       next(err);
@@ -30,12 +24,25 @@ class UserController {
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name } = req.body;
-
-      const user = await prisma.user.create({
-        data: { name },
+      const {
+        firstName,
+        lastName,
+        emailAddress,
+        createdOn,
+        createdBy,
+        modifiedOn,
+        modifiedBy,
+      } = req.body;
+      const user = await UserDetail.create({
+        firstName,
+        lastName,
+        emailAddress,
+        createdOn,
+        createdBy,
+        modifiedOn,
+        modifiedBy
       });
-
+      console.log(user)
       successMiddleware(user, true, res, 201);
     } catch (err) {
       next(err);
@@ -44,18 +51,13 @@ class UserController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = String(req.params.id);
       const { name } = req.body;
-
-      const existingUser = await prisma.user.findUnique({ where: { id } });
-      if (!existingUser)
-        return res.status(404).json({ message: "User not found" });
-
-      const updatedUser = await prisma.user.update({
-        where: { id },
-        data: { name },
-      });
-
+      const updatedUser = await UserDetail.findByIdAndUpdate(
+        req.params.id,
+        { name },
+        { new: true }
+      );
+      if (!updatedUser) return res.status(404).json({ message: 'User not found' });
       successMiddleware(updatedUser, true, res);
     } catch (err) {
       next(err);
@@ -64,15 +66,9 @@ class UserController {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = String(req.params.id);
-
-      const existingUser = await prisma.user.findUnique({ where: { id } });
-      if (!existingUser)
-        return res.status(404).json({ message: "User not found" });
-
-      await prisma.user.delete({ where: { id } });
-
-      successMiddleware({ message: "User deleted" }, true, res);
+      const deletedUser = await UserDetail.findByIdAndDelete(req.params.id);
+      if (!deletedUser) return res.status(404).json({ message: 'User not found' });
+      successMiddleware({ message: 'User deleted' }, true, res);
     } catch (err) {
       next(err);
     }
