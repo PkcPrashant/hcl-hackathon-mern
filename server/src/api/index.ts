@@ -2,8 +2,7 @@ import { app } from "./init";
 import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes";
 import portfolioRoutes from "./routes/portfolio.routes";
-import ordersRoutes from "./routes/order.routes";
-
+import orderRoutes from "./routes/order.routes";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { loggerMiddleware } from "./middlewares/logger.middleware";
 
@@ -12,8 +11,8 @@ const PORT = process.env.API_PORT || 8080;
 app.use(loggerMiddleware);
 app.use("/v1/auth", authRoutes);
 app.use("/v1/users", userRoutes);
+app.use("/v1/order", orderRoutes);
 app.use("/v1/portfolio", portfolioRoutes);
-app.use("/orders", ordersRoutes);
 
 app.use(errorMiddleware);
 
