@@ -1,13 +1,28 @@
-import { PrismaClient } from "@prisma/client";
+import mongoose, { ConnectOptions } from 'mongoose';
+import { MONGODB_URI } from '../config';
 
-export const prisma = new PrismaClient();
+declare global {
+  var mongooseConn: {
+    conn: typeof mongoose | null;
+    promise: Promise<typeof mongoose> | null;
+  };
+}
 
-prisma
-  .$connect()
-  .then(() => {
-    console.log("Database is running");
-  })
-  .catch((err) => {
-    console.error("Failed to connect to the database:", err);
-    process.exit(1);
-  });
+global.mongooseConn ||= {
+  conn: null,
+  promise: null,
+};
+
+export async function connectDB(): Promise<typeof mongoose> {
+  if (global.mongooseConn.conn) {
+    return global.mongooseConn.conn;
+  }
+
+  if (!global.mongooseConn.promise) {
+    global.mongooseConn.promise = mongoose.connect(MONGODB_URI, {
+    } as ConnectOptions);
+  }
+
+  global.mongooseConn.conn = await global.mongooseConn.promise;
+  return global.mongooseConn.conn;
+}
