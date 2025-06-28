@@ -1,6 +1,5 @@
 import mongoose, { ConnectOptions } from 'mongoose';
-
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/hcl';
+import { MONGODB_URI } from '../config';
 
 declare global {
   var mongooseConn: {
