@@ -3,9 +3,8 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt, { SignOptions } from 'jsonwebtoken';
-import UserDetail from '../../models/UserDetail.model';
 import { successMiddleware } from '../middlewares/success.middleware';
-
+import UserDetail from '../../models/User.model';
 const JWT_SECRET = process.env.JWT_SECRET || 'default-secret';
 const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || '1d') as SignOptions['expiresIn'];
 
