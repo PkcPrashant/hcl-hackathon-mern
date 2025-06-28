@@ -1,0 +1,7 @@
+MONGO_URI=mongodb+srv://admin:12345Admin@cluster0.t2qzfpk.mongodb.net/hcl?retryWrites=true&w=majority
+PORT=8080
+KAFKA_BROKER_URL=localhost:9092
+KAFKA_TOPIC=orders
+KAFKA_GROUP_ID=order-group
+JWT_SECRET='secret_password'
+JWT_EXPIRATION=1h
