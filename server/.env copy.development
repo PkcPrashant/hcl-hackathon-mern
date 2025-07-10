@@ -1,4 +1,4 @@
-MONGO_URI=mongodb+srv://admin:12345Admin@cluster0.t2qzfpk.mongodb.net/hcl?retryWrites=true&w=majority
+MONGO_URI=
 PORT=8080
 KAFKA_BROKER_URL=localhost:9092
 KAFKA_TOPIC=orders
